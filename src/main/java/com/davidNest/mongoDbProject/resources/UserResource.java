@@ -19,7 +19,8 @@ public class UserResource {
 
 	@Autowired
 	private UserService service;
-	
+
+	//FIND ALL
 	@RequestMapping(method=RequestMethod.GET)
  	public ResponseEntity<List<UserDTO>> findAll() {
 		List<User> list = service.findAll();
@@ -27,12 +28,15 @@ public class UserResource {
 		return ResponseEntity.ok().body(listDto);
 	}
 
+
+	//FIND BY ID
 	@RequestMapping(value="/{id}", method=RequestMethod.GET)
  	public ResponseEntity<UserDTO> findById(@PathVariable String id) {
 		User obj = service.findById(id);
 		return ResponseEntity.ok().body(new UserDTO(obj));
 	}
 
+	//POST
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Void> insert(@RequestBody UserDTO objDto) {
 		User obj = service.fromDTO(objDto);
@@ -41,9 +45,20 @@ public class UserResource {
 		return ResponseEntity.created(uri).build();
 	}
 
+	//DELETE
 	@RequestMapping(value="/{id}", method=RequestMethod.DELETE)
 	public ResponseEntity<Void>delete(@PathVariable String id) {
 		service.delete(id);
 		return ResponseEntity.noContent().build();
 	}
+
+	//UPDATE
+	@RequestMapping(value="/{id}", method=RequestMethod.PUT)
+	public ResponseEntity<Void> update(@RequestBody UserDTO objDto, @PathVariable String id) {
+		User obj = service.fromDTO(objDto);
+		obj.setId(id);
+		obj = service.update(obj);
+		return ResponseEntity.noContent().build();
+	}
+
 }
